@@ -125,45 +125,43 @@ public class Tablero {
 							panelTiempo.contar();
 						}
 						
-						if (e.getClickCount() == 1) {
-							// Boton Izquierdo
-							if (e.getButton() == MouseEvent.BUTTON1) {				
-								// Si es BOTON 
-								if (celda.getEstado().equals(BotonMina.Estado.BOTON)) {
-									// Si debajo hay una mina acaba
-									if (celda.getValor().equals(BotonMina.Valor.MINA)) {
-										celda.cambiarAspecto(BotonMina.Estado.MINA);
-										minaPulsada = true;
-										isJuegoFinalizado();
-									}									
-									// Si debajo no hay nada, limpio de forma recursiva
-									else if (celda.getValor().equals(BotonMina.Valor.VACIO)) {
-										celda.cambiarAspecto(BotonMina.Estado.PULSADO);
+						// Boton Izquierdo
+						if (e.getButton() == MouseEvent.BUTTON1) {				
+							// Si es BOTON 
+							if (celda.getEstado().equals(BotonMina.Estado.BOTON)) {
+								// Si debajo hay una mina acaba
+								if (celda.getValor().equals(BotonMina.Valor.MINA)) {
+									celda.cambiarAspecto(BotonMina.Estado.MINA);
+									minaPulsada = true;
+									isJuegoFinalizado();
+								}									
+								// Si debajo no hay nada, limpio de forma recursiva
+								else if (celda.getValor().equals(BotonMina.Valor.VACIO)) {
+									celda.cambiarAspecto(BotonMina.Estado.PULSADO);
 
-										recursivoDestapaCeldasAdyacentes(celda.getFil(), celda.getCol());
-										isJuegoFinalizado();	
-									}
-									// Si hay número (indicando las minas adyacentes), lo muestro
-									else if (celda.getValor().equals(BotonMina.Valor.NUMERO)) {
-										celda.cambiarAspecto(BotonMina.Estado.NUMERO);
-										botonesNoMinaSinPulsar--;
-										isJuegoFinalizado();
-									}									
+									recursivoDestapaCeldasAdyacentes(celda.getFil(), celda.getCol());
+									isJuegoFinalizado();	
 								}
+								// Si hay número (indicando las minas adyacentes), lo muestro
+								else if (celda.getValor().equals(BotonMina.Valor.NUMERO)) {
+									celda.cambiarAspecto(BotonMina.Estado.NUMERO);
+									botonesNoMinaSinPulsar--;
+									isJuegoFinalizado();
+								}									
 							}
-							
-							// Boton Derecho
-							if (e.getButton() == MouseEvent.BUTTON3) {
-								// Si es bandera quito bandera (dejo botón)
-								if (celda.getEstado().equals(BotonMina.Estado.BANDERA) ) {
-									celda.cambiarAspecto(BotonMina.Estado.BOTON);
-									panelContadorMinas.incrementaNumMinas();
-								}
-								// Si es botón, pongo bandera
-								else if(celda.getEstado().equals(BotonMina.Estado.BOTON) && panelContadorMinas.getNumMinas() > 0){
-									celda.cambiarAspecto(BotonMina.Estado.BANDERA);
-									panelContadorMinas.decrementaNumMinas();
-								}
+						}
+						
+						// Boton Derecho
+						if (e.getButton() == MouseEvent.BUTTON3) {
+							// Si es bandera quito bandera (dejo botón)
+							if (celda.getEstado().equals(BotonMina.Estado.BANDERA) ) {
+								celda.cambiarAspecto(BotonMina.Estado.BOTON);
+								panelContadorMinas.incrementaNumMinas();
+							}
+							// Si es botón, pongo bandera
+							else if(celda.getEstado().equals(BotonMina.Estado.BOTON) && panelContadorMinas.getNumMinas() > 0){
+								celda.cambiarAspecto(BotonMina.Estado.BANDERA);
+								panelContadorMinas.decrementaNumMinas();
 							}
 						}						
 					}
