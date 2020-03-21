@@ -192,6 +192,9 @@ public class Tablero {
 			if (!matrizBotones[filaMina][columnaMina].getValor().equals(BotonMina.Valor.MINA)) {
 				matrizBotones[filaMina][columnaMina].setValor(BotonMina.Valor.MINA);
 				contador_minas--;
+				
+				// Guardo las coordenadas de todas las minas
+				listaPosicionMinas.add(new Coordenadas(filaMina, columnaMina));
 			}
 		}
 				
