@@ -13,7 +13,8 @@ public class PanelTiempo extends JPanel {
 
 	private Timer timer = new Timer(); 
     private int segundos=0;
-
+    private boolean contadorIniciado = false;
+    
     private JLabel lblTiempo = new JLabel();
     private JLabel lblContadorSegundos = new JLabel("0");
    
@@ -42,6 +43,7 @@ public class PanelTiempo extends JPanel {
         this.segundos=0;
         timer = new Timer();
         timer.schedule(new Contador(), 0, 1000);
+        contadorIniciado = true;
     }
     
     //Detiene el contador
@@ -54,4 +56,12 @@ public class PanelTiempo extends JPanel {
     {
         return this.segundos;
     }
+    
+	public boolean isContadorIniciado() {
+		return contadorIniciado;
+	}
+
+	public void setContadorIniciado(boolean contadorIniciado) {
+		this.contadorIniciado = contadorIniciado;
+	}    
 }

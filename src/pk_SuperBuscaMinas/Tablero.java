@@ -2,9 +2,14 @@ package pk_SuperBuscaMinas;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
+import java.util.ArrayList;
 
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+
 
 public class Tablero {
 	
@@ -19,6 +24,33 @@ public class Tablero {
 
 	private int botonesNoMinaSinPulsar = 0;
 	private boolean minaPulsada = false;
+	
+	private ArrayList<Coordenadas> listaPosicionMinas = new ArrayList<Coordenadas>();
+	
+	
+	// Clase interna para almacenar pares de coordenadas
+	private class Coordenadas {
+		private int fila;
+		private int columna;
+		
+		public Coordenadas(int fila, int columna) {
+			this.fila = fila;
+			this.columna = columna;
+		}
+		
+		public int getFila() {
+			return fila;
+		}
+		public void setFila(int fila) {
+			this.fila = fila;
+		}
+		public int getColumna() {
+			return columna;
+		}
+		public void setColumna(int columna) {
+			this.columna = columna;
+		}
+	}
 	
 	
 	/**
@@ -64,10 +96,6 @@ public class Tablero {
 		panelContadorMinas = new PanelContadorMinas(NUM_MINAS);
 		panelContadorMinas.setBounds(coordX + (CELDA_SIZE * MATRIZ_SIZE) - panelContadorMinas.getWidth(), coordY + 10, panelContadorMinas.getWidth(), panelContadorMinas.getHeight());
 		panelBuscaMinas.add(panelContadorMinas);
-		
-		// Empieza el tiempo
-		panelTiempo.contar();
-		
 		panelBuscaMinas.setBounds(40, 10, CELDA_SIZE * MATRIZ_SIZE + 20, CELDA_SIZE * MATRIZ_SIZE + 100);
 				
 		return panelBuscaMinas;
@@ -101,6 +129,11 @@ public class Tablero {
 
 					@Override
 					public void mouseClicked(MouseEvent e) {
+						// Empieza el tiempo cuando haga click por primera vez
+						if (!panelTiempo.isContadorIniciado()) {
+							panelTiempo.contar();
+						}
+						
 						if (e.getClickCount() == 1) {
 							// Boton Izquierdo
 							if (e.getButton() == MouseEvent.BUTTON1) {				
@@ -189,12 +222,17 @@ public class Tablero {
 	// Método que nos indica si el juego ha finalizado, y si el jugador gana o no
 	private void isJuegoFinalizado() {
 		if (minaPulsada) {	// FIN DEL JUEGO: HA PERDIDO
+			ejecutar_sonido("res/Explosion.wav");
+			muestraMinas();
+			
 			panelTiempo.detener();
 			
 			JOptionPane.showMessageDialog(null, "La mina explotó!!", "Fin del juego", JOptionPane.DEFAULT_OPTION);
 			System.exit(0);
 		}
 		else if (botonesNoMinaSinPulsar <= 0) {	// FIN DEL JUEGO: HA GANADO
+			ejecutar_sonido("res/aplausos.wav");
+			
 			panelTiempo.detener();
 			
 			JOptionPane.showMessageDialog(null, "Ganó la partida!!\nHa tardado: " + panelTiempo.getSegundos() + " segundos", "Fin del juego", JOptionPane.DEFAULT_OPTION);
@@ -202,7 +240,31 @@ public class Tablero {
 		}
 	}	
 	
-		
+	
+	/**
+	 * @param path_sonido TODO
+	 * 
+	 */
+	private void ejecutar_sonido(String path_sonido) {
+		try {
+			Clip sonido = AudioSystem.getClip();
+			
+			File a = new File(path_sonido);
+			sonido.open(AudioSystem.getAudioInputStream(a));
+			sonido.start();
+		} catch (Exception e) {
+			System.out.println("" + e);
+		}
+	}	
+
+	// Método que muestra todas las minas. Se llama cuando se ha pulsado una mina y explota
+	private void muestraMinas() {
+		for (Coordenadas coordenadas: listaPosicionMinas) {
+			matrizBotones[coordenadas.getFila()][coordenadas.getColumna()].cambiarAspecto(BotonMina.Estado.MINA);
+		}		
+	}
+	
+	
 	// Método que destapa las celdas adyacentes a la celda indicada.
 	// Siempre que esas celdas adyacentes no tengan minas de forma recursiva.
 	private void recursivoDestapaCeldasAdyacentes(int fil, int col) {
