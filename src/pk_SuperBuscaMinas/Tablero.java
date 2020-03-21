@@ -119,16 +119,7 @@ public class Tablero {
 				// Añado el listener de ratón
 				celda.addMouseListener(new MouseListener() {
 					@Override
-					public void mouseReleased(MouseEvent e) {}
-					@Override
-					public void mousePressed(MouseEvent e) {}
-					@Override
-					public void mouseExited(MouseEvent e) {}
-					@Override
-					public void mouseEntered(MouseEvent e) {}
-
-					@Override
-					public void mouseClicked(MouseEvent e) {
+					public void mouseReleased(MouseEvent e) {
 						// Empieza el tiempo cuando haga click por primera vez
 						if (!panelTiempo.isContadorIniciado()) {
 							panelTiempo.contar();
@@ -174,8 +165,16 @@ public class Tablero {
 									panelContadorMinas.decrementaNumMinas();
 								}
 							}
-						}
+						}						
 					}
+					@Override
+					public void mousePressed(MouseEvent e) {}
+					@Override
+					public void mouseExited(MouseEvent e) {}
+					@Override
+					public void mouseEntered(MouseEvent e) {}
+					@Override
+					public void mouseClicked(MouseEvent e) {}
 				});				
 			}
 		}
